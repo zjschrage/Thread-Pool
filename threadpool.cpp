@@ -1,6 +1,4 @@
 #include "threadpool.h"
-#include <chrono>
-#include <random>
 #include <iostream>
 
 ThreadPool::ThreadPool(int thds, int it) : max_threads(thds), total_iter(it) {
@@ -14,9 +12,8 @@ ThreadPool::ThreadPool(int thds, int it) : max_threads(thds), total_iter(it) {
     }
 }
 
-void ThreadPool::thread_pool_executor(int count, void (*usr_func)(...), ...) {
-    va_list args;
-    va_start(args, count);
+template<typename Func, typename... Args>
+void ThreadPool::thread_pool_executor(Func func, Args... args) {
     while (running) {
         while (free_indecies.size() > 0 && running) {
 
@@ -25,7 +22,7 @@ void ThreadPool::thread_pool_executor(int count, void (*usr_func)(...), ...) {
             cout_lock.unlock();
 
             int i = free_indecies.front();
-            pool[i] = std::make_unique<std::thread>(&ThreadPool::worker, this, &avalability[i], count, usr_func, args);
+            pool[i] = std::make_unique<std::thread>(&ThreadPool::worker, this, &avalability[i], func, args...);
             free_indecies.pop();
             avalability[i] = false;
             current_iter++;
@@ -43,13 +40,10 @@ void ThreadPool::thread_pool_executor(int count, void (*usr_func)(...), ...) {
             // pool[i]->join(); // Why is this causing abort error I am checking joinable
         }
     }
-    va_end(args);
 }
 
-void ThreadPool::worker(bool* complete, int count, void (*usr_func)(...), ...) {
-    va_list args;
-    va_start(args, count);
-    usr_func(args);
-    va_end(args);
+template<typename Func, typename... Args>
+void ThreadPool::worker(bool* complete, Func func, Args... args) {
+    func(args...);
     *complete = true;
 }

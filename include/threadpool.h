@@ -18,8 +18,10 @@ private:
     int max_threads;
     int total_iter;
     int current_iter;
-    void worker(bool* complete, int count, void (*usr_func)(...), ...);
+    template<typename Func, typename... Args> 
+    void worker(bool* complete, Func func, Args... args);
 public:
     ThreadPool(int thds, int it);
-    void thread_pool_executor(int count, void (*usr_func)(...), ...);
+    template<typename Func, typename... Args> 
+    void thread_pool_executor(Func func, Args... args);
 };
