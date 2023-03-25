@@ -11,8 +11,8 @@ int my_important_work = 0;
 std::mutex my_lock;
 
 void worker() {
-    // double r = ((double) rand() / (RAND_MAX)) * 2;
-    // std::this_thread::sleep_for(std::chrono::seconds((int)(r+1)));
+    double r = ((double) rand() / (RAND_MAX)) * 2;
+    std::this_thread::sleep_for(std::chrono::seconds((int)(r+1)));
 
     const std::lock_guard<std::mutex> lock(my_lock);
     std::cout << "Working " << (my_important_work + 1) << std::endl;
@@ -20,8 +20,8 @@ void worker() {
 }
 
 void worker2(int a, int b, char c) {
-    // double r = ((double) rand() / (RAND_MAX)) * 2;
-    // std::this_thread::sleep_for(std::chrono::seconds((int)(r+1)));
+    double r = ((double) rand() / (RAND_MAX)) * 2;
+    std::this_thread::sleep_for(std::chrono::seconds((int)(r+1)));
 
     const std::lock_guard<std::mutex> lock(my_lock);
     std::cout << "Working 2 (" << (my_important_work + 1) << ") and here are my arguments " << a << " " << b << " " << c << std::endl;

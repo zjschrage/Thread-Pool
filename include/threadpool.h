@@ -39,7 +39,7 @@ void ThreadPool::thread_pool_executor(Func func, Args... args) {
             if (current_iter == total_iter) running = false;
         }
         for (int i = 0; i < max_threads; i++) {
-            if (avalability[i]) {
+            if (avalability[i] && pool[i]->joinable()) {
                 pool[i]->join();
                 free_indecies.push(i);
             }
