@@ -1,7 +1,8 @@
 CC = g++ --std=c++2a -g -Wall
 O = -o threads
-DEPS = *.cpp
 CPPFLAGS = -Iinclude
+DEPS = *.cpp
+
 
 
 all: clean threads
